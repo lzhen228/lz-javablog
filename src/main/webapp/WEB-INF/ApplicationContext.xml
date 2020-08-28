@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.1.xsd"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:cache="http://www.springframework.org/schema/cache">
+
+	<!-- 该 BeanPostProcessor 将自动对标注 @Autowired 的 Bean 进行注入 -->     
+  	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+	
+		
+	<!-- 读取漏洞系统 .properties配置-->
+	<bean id="trackFileProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/conf/trackFile.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!--配置 the @Controller -->
+	<mvc:annotation-driven />
+	<!-- 设置需要进行Spring注解扫描的类包 resources @service and @repository -->
+	<context:component-scan base-package="cn.secure" />
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+
+	<context:property-placeholder location="/WEB-INF/conf/config.properties"></context:property-placeholder>
+	<!-- 数据源配置 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<!-- 设置JDBC驱动名称 -->
+		<property name="driverClass" value="${c3p0.driverClass}" />
+		<property name="jdbcUrl" value="${c3p0.url}" />
+		<property name="user" value="${c3p0.username}" />
+		<property name="password" value="${c3p0.password}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="preferredTestQuery" value="${c3p0.preferredTestQuery}" />
+		<property name="maxConnectionAge" value="${c3p0.maxConnectionAge}" />
+		<property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckout}" />
+		<property name="testConnectionOnCheckin" value="false" />
+		<property name="acquireRetryAttempts" value="5" />
+		<property name="acquireRetryDelay" value="2000" />
+		<property name="breakAfterAcquireFailure" value="false" />
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSource" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="namedParameterJdbcTemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSource"/>
+		</constructor-arg>
+	</bean>
+
+	<bean id="namedParameterJdbcDaoSupport"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport">
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplate" />
+		</property>
+	</bean>
+
+	<bean id="dataSourceRavor" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<!-- 设置JDBC驱动名称 -->
+		<property name="driverClass" value="${c3p0.driverClassRavor}" />
+		<property name="jdbcUrl" value="${c3p0.urlRavor}" />
+		<property name="user" value="${c3p0.usernameRavor}" />
+		<property name="password" value="${c3p0.passwordRavor}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSizeRavor}" />
+		<property name="maxPoolSize" value="${c3p0.maxPoolSizeRavor}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSizeRavor}" />
+		<property name="acquireIncrement" value="${c3p0.acquireIncrementRavor}" />
+		<property name="maxStatements" value="${c3p0.maxStatementsRavor}" />
+		<property name="preferredTestQuery" value="${c3p0.preferredTestQueryRavor}" />
+		<property name="maxConnectionAge" value="${c3p0.maxConnectionAgeRavor}" />
+		<property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckoutRavor}" />
+		<property name="testConnectionOnCheckin" value="false" />
+		<property name="acquireRetryAttempts" value="5" />
+		<property name="acquireRetryDelay" value="2000" />
+		<property name="breakAfterAcquireFailure" value="false" />
+	</bean>
+	<bean id="jdbcTemplateRavor" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSourceRavor" />
+		</constructor-arg>
+	</bean>
+	<bean id="namedParameterJdbcTemplateRavor"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg>
+			<ref bean="dataSourceRavor"/>
+		</constructor-arg>
+	</bean>
+	<bean id="namedParameterJdbcDaoSupportRavor"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport">
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplateRavor" />
+		</property>
+	</bean>
+	   <!-- 上传文件 -->  
+    <bean   class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >  
+        <!-- 500MB -->  
+        <property name="maxUploadSize" value="524288000"></property>      
+        <property name="defaultEncoding" value="utf-8"></property>     
+    </bean>
+<!-- 
+	 <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	 -->
+</beans>
