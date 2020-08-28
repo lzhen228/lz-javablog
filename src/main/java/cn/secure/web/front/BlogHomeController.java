@@ -261,8 +261,8 @@ public class BlogHomeController extends BaseController {
 		Boolean code = false ; 
 		try {
 
-			Credential cred = new Credential("AKIDSfcIht3Ur2j9H9PVo7AqFOHitnPlpRs2",
-					"7IDuMnysY1EBrZ0QpxoO1Sc4RYNvBT6V");
+			Credential cred = new Credential("a",
+					"b");
 
 			HttpProfile httpProfile = new HttpProfile();
 			httpProfile.setEndpoint("sms.tencentcloudapi.com");
