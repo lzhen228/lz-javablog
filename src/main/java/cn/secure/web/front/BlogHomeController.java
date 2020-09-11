@@ -3,22 +3,18 @@ package cn.secure.web.front;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
+
 
 import com.alibaba.fastjson.JSON;
 import com.tencentcloudapi.common.Credential;
@@ -29,6 +25,7 @@ import com.tencentcloudapi.sms.v20190711.SmsClient;
 import com.tencentcloudapi.sms.v20190711.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
 
+import cn.secure.entity.Announcement;
 import cn.secure.entity.Article;
 import cn.secure.entity.Message;
 import cn.secure.entity.Recharge;
@@ -287,6 +284,19 @@ public class BlogHomeController extends BaseController {
 		jr.setResult("message", message);
 		String r = JSON.toJSONString(jr);
 		response.setContentType("textml;charset=UTF-8");
+		response.getWriter().print(r);
+		return null;
+	}
+	
+	@RequestMapping("findAnnouncement")
+	@ResponseBody
+	public String findAnnouncement(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		JsonResult jr = new JsonResult();	
+		List<Announcement> announcement = blogHomeService.findAnnouncement();
+		jr.setResult("announcement", announcement);
+		String r = JSON.toJSONString(jr);
+		response.setContentType("text/html;charset=utf-8");
 		response.getWriter().print(r);
 		return null;
 	}

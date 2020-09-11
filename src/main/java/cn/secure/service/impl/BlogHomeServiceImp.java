@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import cn.secure.dao.BlogHomeDao;
+import cn.secure.entity.Announcement;
 import cn.secure.entity.Article;
 import cn.secure.entity.Message;
 import cn.secure.entity.Recharge;
@@ -119,6 +120,11 @@ public class BlogHomeServiceImp implements BlogHomeService {
 	@Override
 	public List<Recharge> findRecharge() {
 		return blogHomeDao.findRecharge();
+	}
+
+	@Override
+	public List<Announcement> findAnnouncement() {
+		return blogHomeDao.findAnnouncement();
 	}
 
 

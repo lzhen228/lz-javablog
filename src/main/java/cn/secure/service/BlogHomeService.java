@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import cn.secure.entity.Announcement;
 import cn.secure.entity.Article;
 import cn.secure.entity.Message;
 import cn.secure.entity.Recharge;
@@ -39,5 +40,7 @@ public interface BlogHomeService {
 	
 	//查询学习资料
 	List<Recharge> findRecharge();
+	//查询公告栏
+	List<Announcement> findAnnouncement();
 
 }

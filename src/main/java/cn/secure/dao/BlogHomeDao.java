@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.stereotype.Component;
 
+import cn.secure.entity.Announcement;
 import cn.secure.entity.Article;
 import cn.secure.entity.Message;
 import cn.secure.entity.Recharge;
@@ -177,6 +178,28 @@ public class BlogHomeDao extends BaseDao {
 			data.setImg(rs.getString("img"));
 			data.setSmallImg(rs.getString("smallImg"));
 			data.setPercent(rs.getInt("percent"));			
+			return data;
+		}
+	};
+	
+	/**
+	 * 查询公告栏
+	 * 
+	 */
+	public List<Announcement> findAnnouncement() {
+		// 设置参数
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		String sql = " SELECT * FROM announcement ORDER BY time DESC LIMIT 0 , 4 ;  ";
+		
+		return this.getNamedParameterJdbcTemplate().query(sql, paramMap, annMapper);
+	}
+	
+	private RowMapper<Announcement> annMapper = new RowMapper<Announcement>() {
+		public Announcement mapRow(ResultSet rs, int arg1) throws SQLException {
+			Announcement data = new Announcement();
+			data.setId(rs.getInt("id"));
+			data.setTime(sdf.format(rs.getTimestamp("time")));
+			data.setContent(rs.getString("content"));					
 			return data;
 		}
 	};
