@@ -18,6 +18,7 @@ import cn.secure.entity.Article;
 import cn.secure.entity.Message;
 import cn.secure.entity.Recharge;
 import cn.secure.entity.Talk;
+import cn.secure.entity.WxEvent;
 import cn.secure.util.BaseDao;
 
 @Component
@@ -34,7 +35,7 @@ public class BlogHomeDao extends BaseDao {
 			sql += " AND tag=:tag   ";
 		sql += " 	GROUP BY id  ORDER BY isTop DESC ,time DESC ";
 		if(null !=size )
-			sql += "  LIMIT 0,:size ";
+			sql += "  LIMIT :size, 3 ";
 		paramMap.put("id", id);
 		paramMap.put("tag", tag);
 		paramMap.put("size", size);
@@ -203,5 +204,64 @@ public class BlogHomeDao extends BaseDao {
 			return data;
 		}
 	};
+	
+	/**
+	 * 小程序
+	 */
+	/**
+	 * 小程序
+	 */
+	public List<WxEvent> findWXLatest() {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		String sql = "SELECT * FROM wx_event WHERE dateTime = (SELECT MAX(dateTime) FROM wx_event)";
+		return this.getNamedParameterJdbcTemplate().query(sql.toString(), paramMap, wxevent);
+	}
+	
+	
+
+	private RowMapper<WxEvent> wxevent = new RowMapper<WxEvent>() {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		@Override
+		public WxEvent mapRow(ResultSet rs, int arg1) throws SQLException {
+			WxEvent data = new WxEvent();
+			if (rs.getObject("id") != null) {
+				data.setId(rs.getInt("id"));
+			}
+			if (rs.getObject("title") != null) {
+				data.setTitle(rs.getString("title"));
+			}
+			if (rs.getObject("content") != null) {
+				data.setContent(rs.getString("content"));
+			}
+			if (rs.getObject("dateTime") != null) {
+				
+				data.setDate(format.format(rs.getDate("dateTime")));
+			}
+			return data;
+		}
+	};
+	
+	public List<WxEvent> findWXTitle(int id) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		String sql = "SELECT * FROM wx_event WHERE id = :id";
+		paramMap.put("id", id);
+		return this.getNamedParameterJdbcTemplate().query(sql.toString(), paramMap, wxevent);
+	}
+	
+	public List<WxEvent> findWXNext(int curr) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		String sql = "SELECT  * FROM wx_event ORDER BY dateTime DESC  LIMIT :curr , 5 ";
+		paramMap.put("curr", curr);
+		return this.getNamedParameterJdbcTemplate().query(sql.toString(), paramMap, wxevent);
+	}
+	
+	public int insertWxEvent(String title,String content) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		String sql = " INSERT INTO wx_event (title, content, dateTime) VALUES (:title,:content, NOW()) ";
+		paramMap.put("title", title);
+		paramMap.put("content", content);
+		int count = this.getNamedParameterJdbcTemplate().update(sql, paramMap);
+		return count;
+	}
 
 }

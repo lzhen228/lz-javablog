@@ -9,6 +9,7 @@ import cn.secure.entity.Article;
 import cn.secure.entity.Message;
 import cn.secure.entity.Recharge;
 import cn.secure.entity.Talk;
+import cn.secure.entity.WxEvent;
 
 @Service
 public interface BlogHomeService {
@@ -42,5 +43,12 @@ public interface BlogHomeService {
 	List<Recharge> findRecharge();
 	//查询公告栏
 	List<Announcement> findAnnouncement();
+	
+	
+	List<WxEvent> findWXLatest() ;
+	List<WxEvent> findWXTitle(int id);
+	Boolean insertWxEvent(String title,String content); 
+	
+	List<WxEvent> findWXNext(int curr) ;
 
 }

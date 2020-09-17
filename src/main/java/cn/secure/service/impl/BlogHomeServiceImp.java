@@ -13,6 +13,7 @@ import cn.secure.entity.Article;
 import cn.secure.entity.Message;
 import cn.secure.entity.Recharge;
 import cn.secure.entity.Talk;
+import cn.secure.entity.WxEvent;
 import cn.secure.service.BlogHomeService;
 
 @Service("BlogsHomeService")
@@ -125,6 +126,24 @@ public class BlogHomeServiceImp implements BlogHomeService {
 	@Override
 	public List<Announcement> findAnnouncement() {
 		return blogHomeDao.findAnnouncement();
+	}
+	
+	@Override
+	public List<WxEvent> findWXLatest() {
+		return blogHomeDao.findWXLatest();
+	}
+	@Override
+	public List<WxEvent> findWXTitle(int id) {
+		return blogHomeDao.findWXTitle(id);
+	}
+	@Override
+	public Boolean insertWxEvent(String title, String content) {
+		int count = blogHomeDao.insertWxEvent(title, content);
+		return count > 0 ;
+	}
+	@Override
+	public List<WxEvent> findWXNext(int curr) {
+		return blogHomeDao.findWXNext(curr) ;
 	}
 
 
